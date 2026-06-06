@@ -39,7 +39,6 @@ class NaveDeCarga inherits Nave {
 }
 
 
-
 class NaveDePasajeros inherits Nave {
 	const cantidadDePasajeros
 	const cantidadDePersonal = 4
@@ -59,6 +58,20 @@ class NaveDePasajeros inherits Nave {
 }
 
 
+class NaveDeCargaDeResiduosRadiactivos inherits NaveDeCarga{
+	var selladoAlVacio = false
+
+	override method recibirAmenaza() { velocidad = 0 }
+
+	method sellarAlVacio() { selladoAlVacio = true }
+
+	method desellarVacio() { selladoAlVacio = false }
+
+	override method prepararParaViajar() {
+		super()
+		self.sellarAlVacio()
+	}
+}
 
 class NaveDeCombate inherits Nave {
 	var modo = reposo
@@ -127,20 +140,3 @@ object ataque {
 		//nave.cambiarModo()
 	}
 }
-
-
-class NaveDeCargaDeResiduosRadiactivos inherits NaveDeCarga{
-	var selladoAlVacio = false
-
-	override method recibirAmenaza() { velocidad = 0 }
-
-	method sellarAlVacio() { selladoAlVacio = true }
-
-	method desellarVacio() { selladoAlVacio = false }
-
-	override method prepararParaViajar() {
-		super()
-		self.sellarAlVacio()
-	}
-}
-
