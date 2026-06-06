@@ -9,6 +9,8 @@ class Nave {
 	}
 }
 
+
+
 class NaveDeCarga inherits Nave {
 	var carga = 0
 	const cargaLimite = 100000
@@ -21,6 +23,8 @@ class NaveDeCarga inherits Nave {
 	method recibirAmenaza() { carga = 0 }
 
 }
+
+
 
 class NaveDePasajeros inherits Nave {
 	var alarma = false
@@ -39,6 +43,8 @@ class NaveDePasajeros inherits Nave {
 	method recibirAmenaza() { alarma = true }
 
 }
+
+
 
 class NaveDeCombate inherits Nave {
 	var modo = reposo
@@ -68,10 +74,6 @@ class NaveDeCombate inherits Nave {
 	}
 }
 
-
-
-
-
 // Modos de la nave de combate
 object reposo {
 
@@ -94,5 +96,16 @@ object ataque {
 	}
 
 	method estadoAlternativo() = reposo
+}
+
+
+class NaveDeCargaDeResiduosRadiactivos inherits NaveDeCarga{
+//	var selladoAlVacio = true
+
+	override method recibirAmenaza() { velocidad = 0 }
+
+//	method sellarAlVacio() { selladoAlVacio = true }
+
+//	method desellarVacio() { selladoAlVacio = false }
 }
 
