@@ -1,72 +1,93 @@
-class NaveDeCarga {
-
+class Nave {
 	var velocidad = 0
-	var property carga = 0
 
-	method sobrecargada() = carga > 100000
+	method velocidad() = velocidad
+}
 
-	method excedidaDeVelocidad() = velocidad > 100000
+class NaveDeCarga inherits Nave {
+	var carga = 0
+	const cargaLimite = 100000
+	const velocidadLimite = 100000
 
-	method recibirAmenaza() {
-		carga = 0
-	}
+	method sobrecargada() = carga > cargaLimite
+
+	method excedidaDeVelocidad() = velocidad > velocidadLimite
+
+	method recibirAmenaza() { carga = 0 }
 
 }
 
-class NaveDePasajeros {
+class NaveDePasajeros inherits Nave {
+	var alarma = false
+	const cantidadDePasajeros
+	const cantidadDePersonal = 4
+	const velocidadMaximaBase = 300000
 
-	var velocidad = 0
-	var property alarma = false
-	const cantidadDePasajeros = 0
+	method tripulacion() = cantidadDePasajeros + cantidadDePersonal
 
-	method tripulacion() = cantidadDePasajeros + 4
+	method velocidadMaximaLegal() = velocidadMaximaBase / self.tripulacion() - self.penalizacionPorSeguridad()
 
-	method velocidadMaximaLegal() = 300000 / self.tripulacion() - if (cantidadDePasajeros > 100) 200 else 0
+	method penalizacionPorSeguridad() = if (cantidadDePasajeros > 100) 200 else 0
 
 	method estaEnPeligro() = velocidad > self.velocidadMaximaLegal() or alarma
 
-	method recibirAmenaza() {
-		alarma = true
-	}
+	method recibirAmenaza() { alarma = true }
 
 }
 
-class NaveDeCombate {
-	var property velocidad = 0
-	var property modo = reposo
+class NaveDeCombate inherits Nave {
+	var modo = reposo
 	const property mensajesEmitidos = []
+	var armasDesplegadas = false
 
 	method emitirMensaje(mensaje) {
 		mensajesEmitidos.add(mensaje)
 	}
 	
-	method ultimoMensaje() = mensajesEmitidos.last()
+	//method ultimoMensaje() = mensajesEmitidos.last()
 
-	method estaInvisible() = velocidad < 10000 and modo.invisible()
+	method estaInvisible() = modo.cumpleInvisible(self)
 
 	method recibirAmenaza() {
 		modo.recibirAmenaza(self)
 	}
 
+	method desplegarArmas() { armasDesplegadas = true }
+
+	//method acoplarArmas() { armasDesplegadas = false }
+
+	method estanArmasDesplegadas() = armasDesplegadas
+
+	method cambiarEstado() {
+		modo = modo.estadoAlternativo()
+	}
 }
 
+
+
+
+
+// Modos de la nave de combate
 object reposo {
 
-	method invisible() = false
+	method cumpleInvisible(nave) = nave.velocidad() < 10000
 
 	method recibirAmenaza(nave) {
 		nave.emitirMensaje("¡RETIRADA!")
 	}
 
+	method estadoAlternativo() = ataque
 }
 
 object ataque {
 
-	method invisible() = true
+	method cumpleInvisible(nave) = not nave.estanArmasDesplegadas()
 
 	method recibirAmenaza(nave) {
 		nave.emitirMensaje("Enemigo encontrado")
+		nave.desplegarArmas()
 	}
 
+	method estadoAlternativo() = reposo
 }
 
