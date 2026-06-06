@@ -1,7 +1,12 @@
 class Nave {
 	var velocidad = 0
+	const velocidadMaxima = 300000
 
 	method velocidad() = velocidad
+
+	method propulsar() {
+		velocidad = (velocidad + 20000).min(velocidadMaxima)
+	}
 }
 
 class NaveDeCarga inherits Nave {
@@ -21,11 +26,11 @@ class NaveDePasajeros inherits Nave {
 	var alarma = false
 	const cantidadDePasajeros
 	const cantidadDePersonal = 4
-	const velocidadMaximaBase = 300000
+	const velocidadLimiteLegal = 300000
 
 	method tripulacion() = cantidadDePasajeros + cantidadDePersonal
 
-	method velocidadMaximaLegal() = velocidadMaximaBase / self.tripulacion() - self.penalizacionPorSeguridad()
+	method velocidadMaximaLegal() = velocidadLimiteLegal / self.tripulacion() - self.penalizacionPorSeguridad()
 
 	method penalizacionPorSeguridad() = if (cantidadDePasajeros > 100) 200 else 0
 
