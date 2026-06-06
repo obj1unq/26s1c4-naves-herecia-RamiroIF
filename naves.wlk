@@ -1,6 +1,6 @@
 class Nave {
-	var velocidad = 0
 	const velocidadMaxima = 300000
+	var velocidad = 0
 
 	method velocidad() = velocidad
 
@@ -15,30 +15,36 @@ class Nave {
 	method prepararParaViajar() {
 		self.aumentarVelocidad(15000)
 	}
+
+	method recibirAmenaza()
+
+	method encontrarEnemigo() {
+		self.recibirAmenaza()
+		self.propulsar()
+	}
 }
 
 
-
 class NaveDeCarga inherits Nave {
-	var carga = 0
 	const cargaLimite = 100000
 	const velocidadLimite = 100000
+	var carga = 0
 
 	method sobrecargada() = carga > cargaLimite
 
 	method excedidaDeVelocidad() = velocidad > velocidadLimite
 
-	method recibirAmenaza() { carga = 0 }
+	override method recibirAmenaza() { carga = 0 }
 
 }
 
 
 
 class NaveDePasajeros inherits Nave {
-	var alarma = false
 	const cantidadDePasajeros
 	const cantidadDePersonal = 4
 	const velocidadLimiteLegal = 300000
+	var alarma = false
 
 	method tripulacion() = cantidadDePasajeros + cantidadDePersonal
 
@@ -48,7 +54,7 @@ class NaveDePasajeros inherits Nave {
 
 	method estaEnPeligro() = velocidad > self.velocidadMaximaLegal() or alarma
 
-	method recibirAmenaza() { alarma = true }
+	override method recibirAmenaza() { alarma = true }
 
 }
 
@@ -56,8 +62,8 @@ class NaveDePasajeros inherits Nave {
 
 class NaveDeCombate inherits Nave {
 	var modo = reposo
-	const property mensajesEmitidos = []
 	var armasDesplegadas = false
+	const property mensajesEmitidos = []
 
 	method emitirMensaje(mensaje) {
 		mensajesEmitidos.add(mensaje)
@@ -67,7 +73,7 @@ class NaveDeCombate inherits Nave {
 
 	method estaInvisible() = modo.cumpleInvisible(self)
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		modo.recibirAmenaza(self)
 	}
 
