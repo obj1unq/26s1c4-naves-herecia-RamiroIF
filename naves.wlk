@@ -4,8 +4,16 @@ class Nave {
 
 	method velocidad() = velocidad
 
+	method aumentarVelocidad(kmsxseg) {
+		velocidad = (velocidad + kmsxseg).min(velocidadMaxima)
+	}
+
 	method propulsar() {
-		velocidad = (velocidad + 20000).min(velocidadMaxima)
+		self.aumentarVelocidad(20000)
+	}
+
+	method prepararParaViajar() {
+		self.aumentarVelocidad(15000)
 	}
 }
 
@@ -65,12 +73,17 @@ class NaveDeCombate inherits Nave {
 
 	method desplegarArmas() { armasDesplegadas = true }
 
-	//method acoplarArmas() { armasDesplegadas = false }
+	method acoplarArmas() { armasDesplegadas = false }
 
 	method estanArmasDesplegadas() = armasDesplegadas
 
-	method cambiarEstado() {
+	method cambiarModo() {
 		modo = modo.estadoAlternativo()
+	}
+
+	override method prepararParaViajar() {
+		super()
+		modo.preparacionParaViajar(self)
 	}
 }
 
@@ -84,6 +97,11 @@ object reposo {
 	}
 
 	method estadoAlternativo() = ataque
+
+	method preparacionParaViajar(nave) {
+		nave.emitirMensaje("Saliendo en mision")
+		nave.cambiarModo()
+	}
 }
 
 object ataque {
@@ -96,16 +114,27 @@ object ataque {
 	}
 
 	method estadoAlternativo() = reposo
+
+	method preparacionParaViajar(nave) {
+		nave.emitirMensaje("Volviendo a la base")
+		//nave.acoplarArmas()
+		//nave.cambiarModo()
+	}
 }
 
 
 class NaveDeCargaDeResiduosRadiactivos inherits NaveDeCarga{
-//	var selladoAlVacio = true
+	var selladoAlVacio = false
 
 	override method recibirAmenaza() { velocidad = 0 }
 
-//	method sellarAlVacio() { selladoAlVacio = true }
+	method sellarAlVacio() { selladoAlVacio = true }
 
-//	method desellarVacio() { selladoAlVacio = false }
+	method desellarVacio() { selladoAlVacio = false }
+
+	override method prepararParaViajar() {
+		super()
+		self.sellarAlVacio()
+	}
 }
 
